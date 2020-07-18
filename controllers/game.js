@@ -1,8 +1,8 @@
 const store = require('../store')
 
 exports.getGame = (req, res, next) => {
-    const { topTen } = store.getState()
-    res.send(topTen)
+    const { games } = store.getState()
+    res.send(games)
 }
 
 exports.createGame = (req, res, next) => {

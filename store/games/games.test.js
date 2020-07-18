@@ -1,11 +1,11 @@
 const { configureStore } = require('@reduxjs/toolkit')
-const gamesStore = require('./index')
+const { reducer, actions, gamesSelectors } = require('./index')
 
 jest.mock('../../utils/generateTreasures')
 const generateTreasures = require('../../utils/generateTreasures')
 
-const store = configureStore({ reducer: gamesStore.reducer })
-const { addGame, updateGame, deleteGame } = gamesStore.actions
+const store = configureStore({ reducer: { games: reducer } })
+const { addGame, updateGame, deleteGame } = actions
 
 const treasures = [
     [1, 3],
@@ -20,20 +20,19 @@ const newGameIn = {
 }
 
 describe('store/games', () => {
-    it('has initial state', () => {
-        expect(store.getState()).toStrictEqual([])
-    })
-
     it('can create new game', () => {
         store.dispatch(addGame(newGameIn))
-        const newGame = store.getState()[0]
+        const newGame = gamesSelectors.selectById(
+            store.getState(),
+            newGameIn.id
+        )
 
-        expect(store.getState().length).toBe(1)
+        expect(gamesSelectors.selectTotal(store.getState())).toBe(1)
         expect(newGame.id).toBe(newGameIn.id)
         expect(newGame.userName).toBe(newGameIn.userName)
         expect(newGame.treasures).toStrictEqual(treasures)
         expect(newGame.revealedFields).toStrictEqual([])
-        expect(newGame.movesCount).toBe(0)
+        expect(newGame.score).toBe(0)
         expect(newGame.finished).toBe(false)
         expect(newGame.createdAt).toStrictEqual(newGame.updatedAt)
     })
@@ -51,10 +50,13 @@ describe('store/games', () => {
 
         store.dispatch(updateGame(payload))
 
-        const editedGame = store.getState()[0]
+        const editedGame = gamesSelectors.selectById(
+            store.getState(),
+            newGameIn.id
+        )
 
         expect(editedGame.revealedFields).toStrictEqual(revealedFields)
-        expect(editedGame.movesCount).toBe(1)
+        expect(editedGame.score).toBe(1)
         expect(editedGame.finished).toBe(false)
         expect(editedGame.updatedAt).not.toBe(editedGame.createdAt)
     })
@@ -67,7 +69,10 @@ describe('store/games', () => {
 
         store.dispatch(updateGame(payload))
 
-        const editedGame = store.getState()[0]
+        const editedGame = gamesSelectors.selectById(
+            store.getState(),
+            newGameIn.id
+        )
 
         const areTreasuresInRevealsFields = treasures.every((treasure) =>
             editedGame.revealedFields.some(
@@ -75,15 +80,90 @@ describe('store/games', () => {
             )
         )
         expect(areTreasuresInRevealsFields).toBeTruthy()
-        expect(editedGame.movesCount).toBe(2)
+        expect(editedGame.score).toBe(2)
         expect(editedGame.finished).toBe(true)
     })
 
     it('can delete game', () => {
         const deletedId = newGameIn.id
-
         store.dispatch(deleteGame(deletedId))
+        expect(gamesSelectors.selectTotal(store.getState())).toBe(0)
+    })
 
-        expect(store.getState()).toStrictEqual([])
+    it('are sorted finished from lowest score', () => {
+        const steps = [
+            {
+                action: addGame,
+                payload: newGameIn,
+            },
+            {
+                action: addGame,
+                payload: {
+                    id: 'second-game',
+                    userNama: 'Second user',
+                },
+            },
+            {
+                action: updateGame,
+                payload: {
+                    id: 'second-game',
+                    revealedFields: [
+                        [0, 1],
+                        [3, 4],
+                        [2, 5],
+                    ],
+                },
+            },
+            {
+                action: addGame,
+                payload: {
+                    id: 'third-game',
+                    userName: 'Third user',
+                },
+            },
+            {
+                action: updateGame,
+                payload: {
+                    id: 'third-game',
+                    revealedFields: treasures,
+                },
+            },
+            {
+                action: updateGame,
+                payload: {
+                    id: 'second-game',
+                    revealedFields: treasures,
+                },
+            },
+            {
+                action: updateGame,
+                payload: {
+                    id: 'first-game',
+                    revealedFields: [
+                        [0, 1],
+                        [3, 4],
+                        [2, 5],
+                    ],
+                },
+            },
+        ]
+
+        steps.forEach(({ action, payload }) => store.dispatch(action(payload)))
+
+        const areScoresSorted = gamesSelectors
+            .selectAll(store.getState())
+            .reduce(
+                (acc, curr) => {
+                    if (!acc[0]) {
+                        return acc
+                    }
+
+                    return acc[1].id
+                        ? [curr.score >= acc[1].score || !curr.finished, curr]
+                        : [true, curr]
+                },
+                [true, {}]
+            )[0]
+        expect(areScoresSorted).toBeTruthy()
     })
 })

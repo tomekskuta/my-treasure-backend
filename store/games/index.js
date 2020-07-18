@@ -1,7 +1,17 @@
-const { createSlice } = require('@reduxjs/toolkit')
+const { createSlice, createEntityAdapter } = require('@reduxjs/toolkit')
 const getTime = require('date-fns/getTime')
 const generateTreasures = require('../../utils/generateTreasures')
 const getFinish = require('../../utils/getFinish')
+
+const gamesAdapter = createEntityAdapter({
+    selectId: (game) => game.id,
+    sortComparer: (a, b) => {
+        if (!a.finished) {
+            return 1
+        }
+        return a.score - b.score
+    },
+})
 
 const addGame = (state, action) => {
     const { id, userName } = action.payload
@@ -11,39 +21,37 @@ const addGame = (state, action) => {
         userName,
         treasures: generateTreasures(),
         revealedFields: [],
-        movesCount: 0,
+        score: 0,
         finished: false,
         createdAt,
         updatedAt: createdAt,
     }
-    return state.concat(newGame)
+    return gamesAdapter.addOne(state, newGame)
 }
 
 const updateGame = (state, action) => {
     const { id, revealedFields } = action.payload
-    const updatedState = state.map((game) => {
-        const newRevealedFields = game.revealedFields.concat(revealedFields)
-        return game.id === id
-            ? Object.assign({}, game, {
-                  revealedFields: newRevealedFields,
-                  movesCount: game.movesCount + 1,
-                  finished: getFinish(game.treasures, newRevealedFields),
-                  updatedAt: getTime(new Date()),
-              })
-            : game
-    })
-    return updatedState
+    const currentGame = state.entities[id]
+    const newRevealedFields = currentGame.revealedFields.concat(revealedFields)
+
+    const changes = {
+        revealedFields: newRevealedFields,
+        score: currentGame.score + 1,
+        finished: getFinish(currentGame.treasures, newRevealedFields),
+        updatedAt: getTime(new Date()),
+    }
+    gamesAdapter.updateOne(state, { id, changes })
 }
 
-const deleteGame = (state, action) => {
-    const deletedId = action.payload
-    return state.filter((game) => game.id !== deletedId)
-}
+const deleteGame = gamesAdapter.removeOne
 
 const games = createSlice({
     name: 'games',
-    initialState: [],
+    initialState: gamesAdapter.getInitialState(),
     reducers: { addGame, updateGame, deleteGame },
 })
 
-module.exports = games
+const { reducer, actions } = games
+const gamesSelectors = gamesAdapter.getSelectors((state) => state.games)
+
+module.exports = { reducer, actions, gamesSelectors }

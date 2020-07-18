@@ -1,11 +1,11 @@
 const store = require('../store')
 
 exports.getScores = (req, res, next) => {
-    const { scores } = store.getState()
-    res.send(scores)
+    const { games } = store.getState()
+    res.send(games)
 }
 
 exports.getBest = (req, res, next) => {
-    const { scores } = store.getState()
-    res.send(scores[0])
+    const { games } = store.getState()
+    res.send(games)
 }

@@ -10,8 +10,10 @@
     "dependencies": {
         "@reduxjs/toolkit": "^1.4.0",
         "cookie-parser": "~1.4.4",
+        "date-fns": "^2.15.0",
         "debug": "~2.6.9",
         "express": "~4.16.1",
+        "lodash.isequal": "^4.5.0",
         "morgan": "~1.9.1",
         "redux": "^4.0.5"
     },

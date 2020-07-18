@@ -8,5 +8,13 @@
     "extends": "eslint:recommended",
     "rules": {
         "no-unused-vars": "warn"
+    },
+    "ecmaFeatures": {
+        "spread": true,
+        "arrowFunctions": true,
+        "experimentalObjectRestSpread": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 8
     }
 }

@@ -14,8 +14,10 @@
         "debug": "~2.6.9",
         "express": "~4.16.1",
         "lodash.isequal": "^4.5.0",
+        "lodash.pick": "^4.4.0",
         "morgan": "~1.9.1",
-        "redux": "^4.0.5"
+        "redux": "^4.0.5",
+        "uuid": "^8.2.0"
     },
     "devDependencies": {
         "eslint": "^7.4.0",

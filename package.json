@@ -1,14 +1,25 @@
 {
-  "name": "backend",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
-  "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "morgan": "~1.9.1"
-  }
+    "name": "backend",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node ./bin/www",
+        "develop": "nodemon ./bin/www",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@reduxjs/toolkit": "^1.4.0",
+        "cookie-parser": "~1.4.4",
+        "debug": "~2.6.9",
+        "express": "~4.16.1",
+        "morgan": "~1.9.1",
+        "redux": "^4.0.5"
+    },
+    "devDependencies": {
+        "eslint": "^7.4.0",
+        "jest": "^26.1.0",
+        "nodemon": "^2.0.4",
+        "prettier": "^2.0.5",
+        "supertest": "^4.0.2"
+    }
 }

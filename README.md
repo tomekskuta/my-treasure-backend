@@ -1,7 +1,5 @@
 # My treasure game - Backend
 
-## Start
-
 To launch app clone the repo:
 
 ```bash
@@ -16,7 +14,7 @@ yarn install
 npm install
 ```
 
-...and run app:
+and run app:
 
 ```bash
 yarn start

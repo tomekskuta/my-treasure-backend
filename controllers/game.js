@@ -30,7 +30,7 @@ exports.getGame = (req, res) => {
         resGame.revealedFields,
         currentGame.matrix
     )
-    res.send(resGame)
+    res.json(resGame)
 }
 
 exports.createGame = async (req, res) => {
@@ -51,8 +51,15 @@ exports.createGame = async (req, res) => {
         store.getState(),
         newGamePayload.id
     )
+    const resGame = pick(newGame, [
+        'id',
+        'userName',
+        'score',
+        'finished',
+        'revealedFields',
+    ])
 
-    res.status(201).send(newGame)
+    res.status(201).json(resGame)
 }
 
 exports.updateGame = (req, res) => {
@@ -94,8 +101,4 @@ exports.updateGame = (req, res) => {
     }
 
     res.status(200).json(resBody)
-}
-
-exports.deleteGame = (req, res, next) => {
-    res.send('game deleted')
 }

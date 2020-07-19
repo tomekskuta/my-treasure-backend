@@ -197,11 +197,6 @@ describe('routes/game', () => {
                 [2, 4],
             ],
         }
-        const resRevealedWithStatuses = [
-            { coordinates: [1, 2], status: 3 },
-            { coordinates: [3, 3], status: 2 },
-            { coordinates: [2, 4], status: 2 },
-        ]
 
         store.dispatch(actions.addGame(newGame))
 
@@ -215,7 +210,9 @@ describe('routes/game', () => {
         expect(res.body.userName).toBe(newGame.userName)
         expect(res.body.score).toBe(1)
         expect(res.body.finished).toBe(false)
-        expect(res.body.revealedFields).toStrictEqual(resRevealedWithStatuses)
+        expect(res.body.revealedFields).toStrictEqual(
+            mockRevealedFieldsWithStatus
+        )
     })
 
     it('PATCH - 200 status and finished. get: id, userName, score, finished, revealedFields, top 10 scores', async () => {
@@ -225,10 +222,6 @@ describe('routes/game', () => {
             id,
             revealedFields: mockTreasures,
         }
-        const resRevealedWithStatuses = mockTreasures.map((coordinates) => ({
-            coordinates,
-            status: 'T',
-        }))
 
         store.dispatch(actions.addGame(newGame))
 
@@ -243,9 +236,9 @@ describe('routes/game', () => {
             topScores.length < 11 &&
             topScores.reduce(
                 (acc, curr) => {
-                    !acc[0] ||
-                    !acc[1] ||
-                    (typeof curr === 'object' && curr.score >= acc[1].score)
+                    return !acc[0] ||
+                        !acc[1] ||
+                        (typeof curr === 'object' && curr.score >= acc[1].score)
                         ? [true, curr]
                         : [false, curr]
                 },
@@ -257,7 +250,9 @@ describe('routes/game', () => {
         expect(res.body.userName).toBe(newGame.userName)
         expect(res.body.score).toBe(1)
         expect(res.body.finished).toBe(true)
-        expect(res.body.revealedFields).toStrictEqual(resRevealedWithStatuses)
+        expect(res.body.revealedFields).toStrictEqual(
+            mockRevealedFieldsWithStatus
+        )
         expect(areTopScores).toBeTruthy()
     })
 })

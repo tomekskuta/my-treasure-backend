@@ -1,8 +1,16 @@
-const getFinish = (treasures, revealedFields) => {
-    return treasures.every((treasure) =>
-        revealedFields.some(
-            (field) => field[0] === treasure[0] && field[1] === treasure[1]
-        )
+const getFinish = (revealedFields, matrix) => {
+    if (
+        !Array.isArray(revealedFields) ||
+        !Array.isArray(matrix) ||
+        matrix.every((row) => !Array.isArray(row))
+    ) {
+        return false
+    }
+
+    return (
+        revealedFields
+            .map(([row, column]) => matrix[row][column])
+            .filter((status) => status === 'T').length === 3
     )
 }
 

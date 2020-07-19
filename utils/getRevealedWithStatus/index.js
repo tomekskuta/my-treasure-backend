@@ -3,22 +3,21 @@ const fieldHasProperShape = (field) =>
     field.length === 2 &&
     field.every((coordinate) => Number.isInteger(coordinate))
 
-const getRevealedWithStatus = (revealedFields, treasures) => {
+const getRevealedWithStatus = (revealedFields, matrix) => {
     const isRevealdFieldsArrayWithElements =
         Array.isArray(revealedFields) && revealedFields.length
-    const hasTreasuresThreeProperElements =
-        Array.isArray(treasures) &&
-        treasures.length === 3 &&
-        treasures.every(fieldHasProperShape)
 
-    if (!isRevealdFieldsArrayWithElements || !hasTreasuresThreeProperElements) {
+    if (!isRevealdFieldsArrayWithElements || !Array.isArray(matrix)) {
         return []
     }
 
     const fieldsToTransform = revealedFields.filter(fieldHasProperShape)
-    // const transformedFields = fieldsToTransform.map(field => )
+    const transformedFields = fieldsToTransform.map(([row, column]) => ({
+        coordinates: [row, column],
+        status: matrix[row] && matrix[row][column],
+    }))
 
-    return fieldsToTransform
+    return transformedFields
 }
 
 module.exports = getRevealedWithStatus

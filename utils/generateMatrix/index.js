@@ -55,16 +55,10 @@ const asignNextFields = ({ fields, status, matrix }) => {
     })
 }
 
-const generateMatrixFromTreasures = (treasures) => {
+const generateMatrix = (treasures) => {
     const emptyRow = new Array(5).fill(null)
-    const matrix = {
-        0: emptyRow,
-        1: emptyRow,
-        2: emptyRow,
-        3: emptyRow,
-        4: emptyRow,
-    }
+    const matrix = new Array(5).fill(emptyRow)
     return asignNextFields({ fields: treasures, status: 'T', matrix })
 }
 
-module.exports = generateMatrixFromTreasures
+module.exports = generateMatrix

@@ -3,6 +3,7 @@ const { reducer, actions, gamesSelectors } = require('./index')
 
 jest.mock('../../utils/generateTreasures')
 const generateTreasures = require('../../utils/generateTreasures')
+const generateMatrix = require('../../utils/generateMatrix')
 
 const store = configureStore({ reducer: { games: reducer } })
 const { addGame, updateGame, deleteGame } = actions
@@ -18,6 +19,7 @@ const newGameIn = {
     id: 'first-game',
     userName: 'Test Name',
 }
+const mockMatrix = generateMatrix(treasures)
 
 describe('store/games', () => {
     it('can create new game', () => {
@@ -30,7 +32,7 @@ describe('store/games', () => {
         expect(gamesSelectors.selectTotal(store.getState())).toBe(1)
         expect(newGame.id).toBe(newGameIn.id)
         expect(newGame.userName).toBe(newGameIn.userName)
-        expect(newGame.treasures).toStrictEqual(treasures)
+        expect(newGame.matrix).toStrictEqual(mockMatrix)
         expect(newGame.revealedFields).toStrictEqual([])
         expect(newGame.score).toBe(0)
         expect(newGame.finished).toBe(false)
@@ -41,7 +43,7 @@ describe('store/games', () => {
         const revealedFields = [
             [2, 4],
             [4, 3],
-            [0, 1],
+            [0, 2],
         ]
         const payload = {
             id: newGameIn.id,

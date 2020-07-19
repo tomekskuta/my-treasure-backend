@@ -1,5 +1,6 @@
 const { createSlice, createEntityAdapter } = require('@reduxjs/toolkit')
 const getTime = require('date-fns/getTime')
+const generateMatrix = require('../../utils/generateMatrix')
 const generateTreasures = require('../../utils/generateTreasures')
 const getFinish = require('../../utils/getFinish')
 
@@ -19,7 +20,7 @@ const addGame = (state, action) => {
     const newGame = {
         id,
         userName,
-        treasures: generateTreasures(),
+        matrix: generateMatrix(generateTreasures()),
         revealedFields: [],
         score: 0,
         finished: false,
@@ -37,7 +38,7 @@ const updateGame = (state, action) => {
     const changes = {
         revealedFields: newRevealedFields,
         score: currentGame.score + 1,
-        finished: getFinish(currentGame.treasures, newRevealedFields),
+        finished: getFinish(newRevealedFields, currentGame.matrix),
         updatedAt: getTime(new Date()),
     }
     gamesAdapter.updateOne(state, { id, changes })

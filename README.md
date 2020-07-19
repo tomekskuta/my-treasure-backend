@@ -26,9 +26,11 @@ npm start
 
 App starts on `4000` port as default.
 
-## API (CRU ;p)
+---
 
-### GET /game/:gameId
+## API - CRU ;p
+
+### GET `/game/:gameId`
 
 ##### Response:
 
@@ -42,7 +44,7 @@ App starts on `4000` port as default.
 }
 ```
 
-### POST /game
+### POST `/game`
 
 ##### Request:
 
@@ -64,7 +66,7 @@ App starts on `4000` port as default.
 }
 ```
 
-### PATCH /game
+### PATCH `/game`
 
 ##### Request:
 

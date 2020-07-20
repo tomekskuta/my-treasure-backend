@@ -71,8 +71,12 @@ exports.updateGame = (req, res) => {
     const getCurrentGame = () =>
         gamesSelectors.selectById(store.getState(), req.body.id)
 
-    if (!getCurrentGame()) {
+    const currentGameBeforeUpdate = getCurrentGame()
+    if (!currentGameBeforeUpdate) {
         return res.status(404).send('Game not found')
+    }
+    if (currentGameBeforeUpdate.finished) {
+        return res.status(403).send('Forbidden')
     }
 
     store.dispatch(actions.updateGame(req.body))

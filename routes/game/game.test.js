@@ -186,6 +186,33 @@ describe('routes/game', () => {
         expect(res.statusCode).toBe(404)
     })
 
+    it('PATCH - 403 status if game is finished', async () => {
+        const id = 'patch-403-game-finished'
+        const newData = { id, userName: 'User' }
+        const updateData = {
+            id,
+            revealedFields: mockTreasures,
+        }
+        const reqBody = {
+            id,
+            revealedFields: [
+                [1, 2],
+                [3, 3],
+                [2, 4],
+            ],
+        }
+
+        store.dispatch(actions.addGame(newData))
+        store.dispatch(actions.updateGame(updateData))
+
+        const res = await superRequest(app)
+            .patch('/game')
+            .send(reqBody)
+            .set('Accept', 'application/json')
+
+        expect(res.statusCode).toBe(403)
+    })
+
     it('PATCH - 200 status and not finished. get: id, userName, score, revealedFields, finished', async () => {
         const id = 'patch-200-game-not-finished'
         const newGame = { id, userName: 'User' }

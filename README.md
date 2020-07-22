@@ -3,7 +3,7 @@
 To launch app clone the repo:
 
 ```bash
-git clone https://github.com/tomekskuta/luxoft-my-treasure-backend.git
+git clone https://github.com/tomekskuta/my-treasure-backend.git
 ```
 
 install packages:

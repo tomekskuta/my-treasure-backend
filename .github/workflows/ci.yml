@@ -31,4 +31,4 @@ jobs:
             - name: Install dependencies
               run: yarn
             - name: Sync project files
-              run: rsync -avzr --delete ${GITHUB_WORKSPACE}/ ${{ secrets.HOST_NAME }}@${{ secrets.HOST_ADDRESS }}:${{ secrets.HOST_PATH }}
+              run: rsync -avzr --delete ${GITHUB_WORKSPACE}/ --exclude 'public' ${{ secrets.HOST_NAME }}@${{ secrets.HOST_ADDRESS }}:${{ secrets.HOST_PATH }}

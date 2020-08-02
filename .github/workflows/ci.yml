@@ -22,7 +22,7 @@ jobs:
               env:
                   DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
               with:
-                  ssh-private-key: '$DEPLOY_SSH_KEY'
+                  ssh-private-key: $DEPLOY_SSH_KEY
             - name: Setup known_hosts
               env:
                   SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}

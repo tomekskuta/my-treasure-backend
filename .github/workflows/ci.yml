@@ -19,10 +19,14 @@ jobs:
             - uses: actions/checkout@v2
             - name: Setup SSH agent
               uses: webfactory/ssh-agent@v0.4.0
+              env:
+                  DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
               with:
-                  ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+                  ssh-private-key: '$DEPLOY_SSH_KEY'
             - name: Setup known_hosts
-              run: echo ${{ secrets.SSH_KNOWN_HOSTS }} >> ~/.ssh/known_hosts
+              env:
+                  SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+              run: echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
             - name: Setup node
               uses: actions/setup-node@v1
               with:
@@ -31,4 +35,8 @@ jobs:
             - name: Install dependencies
               run: yarn
             - name: Sync project files
-              run: rsync -avzr --delete ${GITHUB_WORKSPACE}/ --exclude 'public' ${{ secrets.HOST_NAME }}@${{ secrets.HOST_ADDRESS }}:${{ secrets.HOST_PATH }}
+              env:
+                  HOST_NAME: ${{ secrets.HOST_NAME }}
+                  HOST_ADDRESS: ${{ secrets.HOST_ADDRESS }}
+                  HOST_PATH: ${{ secrets.HOST_PATH }}
+              run: rsync -avzr --delete ${GITHUB_WORKSPACE}/ --exclude 'public' "$HOST_NAME"@"$HOST_ADDRESS":"$HOST_PATH"

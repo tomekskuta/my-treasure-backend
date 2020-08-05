@@ -1,6 +1,8 @@
 # My treasure game - Backend
 
-To launch app clone the repo:
+[Let's play!](https://my-treasure.tomekskuta.pl/)
+
+To launch app locally clone the repo:
 
 ```bash
 git clone https://github.com/tomekskuta/my-treasure-backend.git
@@ -22,7 +24,9 @@ yarn start
 npm start
 ```
 
-App starts on `4000` port as default.
+App starts on `localhost:4000` as default.
+
+Next follow instructions from [frontend](https://github.com/tomekskuta/my-treasure-frontend part.
 
 ---
 
